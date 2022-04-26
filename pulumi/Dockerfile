@@ -5,7 +5,7 @@ COPY . .
 # Download and install required tools.
 RUN apk --no-cache add curl
 RUN curl -L https://get.pulumi.com/ | sh
-RUN npm install -g npm@8.5.2
+RUN npm install -g npm@8.7.0
 
 ENV PATH=$PATH:/root/.pulumi/bin
 
