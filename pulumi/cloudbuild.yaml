@@ -1,5 +1,6 @@
 steps:
 - name: gcr.io/cloud-builders/docker
+  dir: ./pulumi
   args: ['build', '--tag=gcr.io/$PROJECT_ID/pulumi-node', '.']
 
 # Print version information.
