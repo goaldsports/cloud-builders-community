@@ -1,4 +1,4 @@
-FROM node:16.14.2-alpine3.15
+FROM node:18.15.0-alpine3.17
 
 COPY . .
 
@@ -6,7 +6,7 @@ COPY . .
 RUN apk --no-cache add curl
 RUN apk --no-cache add bash
 RUN curl -L https://get.pulumi.com/ | sh
-RUN npm install -g npm@8.13.1
+RUN npm install -g npm@9.6.2
 
 ENV PATH=$PATH:/root/.pulumi/bin
 
