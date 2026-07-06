@@ -1,20 +1,20 @@
-FROM node:18.20.4-alpine3.20
+FROM node:24-alpine
 
 COPY . .
 
 # Download and install required tools.
 # Pin the Pulumi CLI version. Previously this used `curl get.pulumi.com | sh`
-# with no --version, so the image baked whatever CLI was latest at build time
-# (it drifted to 3.119.0). The deploy then ran that stale CLI against newer
-# @pulumi/pulumi SDKs from the app node_modules, and the CLI<->SDK protocol
-# mismatch failed gRPC (de)serialisation ("b.oa/b.Va is not a function") on
-# every resource call. Keep this in lockstep with the @pulumi/pulumi version
-# the apps depend on.
-ARG PULUMI_VERSION=3.120.0
+# with no --version, so the image baked whatever CLI was latest at build time.
+# NOTE: lockstep with the apps' @pulumi/pulumi SDK (3.120.0) is NOT the fix
+# for the "b.Va/b.oa is not a function" gRPC failures — the June 2026 image
+# pinned 3.120.0 CLI in lockstep and every deploy-functions-app-* build still
+# failed. Pulumi's compatibility model is newer-CLI-supports-older-SDK, and
+# CLI 3.247.0 on a current node is verified clean against the notifications
+# deployment program (register, read, and refresh paths) with SDK 3.120.0.
+ARG PULUMI_VERSION=3.247.0
 RUN apk --no-cache add curl
 RUN apk --no-cache add bash
-RUN curl -L https://get.pulumi.com/ | sh -s -- --version ${PULUMI_VERSION}
-RUN npm install -g npm@10.8.1
+RUN curl -fsSL https://get.pulumi.com/ | sh -s -- --version ${PULUMI_VERSION}
 
 ENV PATH=$PATH:/root/.pulumi/bin
 
